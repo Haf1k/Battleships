@@ -6,8 +6,8 @@ class Board:
     def __init__(self, x=10, y=10, is_hidden=True):
         self.x = x
         self.y = y
-        self.board = [[" – " for j in range(x)] for i in range(y)]
-        self.hidden = [[" ~ " for j in range(x)] for i in range(y)]
+        self.board = [[" – " for _ in range(x)] for _ in range(y)]
+        self.hidden = [[" ~ " for _ in range(x)] for _ in range(y)]
         self.is_hidden = is_hidden
 
     def print_board(self):
