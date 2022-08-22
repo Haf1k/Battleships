@@ -43,50 +43,67 @@ class Board:
 
 class Ship:
 
-    def __init__(self, size, x_pos, y_pos, damage=0, is_destroyed=False):
+    def __init__(self, size):
         self.size = size
-        self.x_pos = x_pos
-        self.y_pos = y_pos
-        self.damage = damage
-        self.is_destroyed = is_destroyed
+        self.damage = 0
+        self.is_destroyed = False
+        self.x_pos = 0
+        self.y_pos = 0
+        self.orientation = ""
 
     def ship_placement(self):
         try:
-            x = int(input("Please enter coordinate of X axis: "))
-            y = int(input("Please enter coordinate of Y axis: "))
-            orientation = input("Please choose orientation of your ship > horizontal or vertical (h  / v): ")
-            if orientation not in ("h", "v"):
+            self.x_pos = int(input("Please enter coordinate of X axis: "))
+            self.y_pos = int(input("Please enter coordinate of Y axis: "))
+            self.orientation = input("Please choose orientation of your ship > horizontal or vertical (h  / v): ")
+            if self.orientation not in ("h", "v"):
                 raise ValueError
         except ValueError:
             print("Enter coordinates in right form: ")
             self.ship_placement()
         else:
             try:
-                if orientation == "v":
-                    if (x - 1) + self.size > player_board.x or (y - 1) + self.size > player_board.y:
+                if self.orientation == "h":
+                    if (self.x_pos - 1) + self.size > player_board.x or (
+                            self.y_pos - 1) > player_board.y or self.check_collision():
                         raise IndexError
                     else:
                         for i in range(self.size):
-                            player_board.board[(x - 1) + i][y - 1] = " X "
+                            player_board.board[self.y_pos - 1][(self.x_pos - 1) + i] = " X "
                 else:
-                    if (x - 1) + self.size > player_board.x or (y - 1) + self.size > player_board.y:
+                    if (self.x_pos - 1) > player_board.x or (
+                            self.y_pos - 1) + self.size > player_board.y or self.check_collision():
                         raise IndexError
                     else:
                         for i in range(self.size):
-                            player_board.board[x - 1][(y - 1) + i] = " X "
+                            player_board.board[(self.y_pos - 1) + i][self.x_pos - 1] = " X "
             except IndexError:
                 print("Wrong coordinates")
                 self.ship_placement()
 
     def check_collision(self):
-        pass
+        if self.orientation == "v":
+            for i in range(self.size):
+                if player_board.board[(self.y_pos - 1) + i][self.x_pos - 1] == " X ":
+                    return True
+        elif self.orientation == "h":
+            for i in range(self.size):
+                if player_board.board[self.y_pos - 1][(self.x_pos - 1) + i] == " X ":
+                    return True
 
 
 player_board = Board()
 
-ship_list = [Ship(5, 1, 1), Ship(5, 1, 1)]
+player_board.print_hidden()
+player_board.print_board()
+
+ship_list = [Ship(5), Ship(5)]
 
 ship_list[0].ship_placement()
+player_board.print_board()
+ship_list[1].ship_placement()
 
-player_board.print_hidden()
+# player_board.board[1][3] = " X "
+
+# player_board.print_hidden()
 player_board.print_board()
