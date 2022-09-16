@@ -48,10 +48,16 @@ class Board:
             self.board[y_coordinate - 1][x_coordinate - 1] = " # "
             self.hidden[y_coordinate - 1][x_coordinate - 1] = " # "
             print("HIT")
+            self.find_ship([x_coordinate, y_coordinate]).deal_damage()
         else:
             self.board[y_coordinate - 1][x_coordinate - 1] = " O "
             self.hidden[y_coordinate - 1][x_coordinate - 1] = " O "
             print("MISS")
+
+    def find_ship(self, shoot_coordinates):
+        for each in self.ship_list:
+            if shoot_coordinates in each.ship_coordinates:
+                return each
 
 
 class Ship:
@@ -62,7 +68,7 @@ class Ship:
         self.is_destroyed = False
         self.x_pos = 0
         self.y_pos = 0
-        self.coordinates = []
+        self.ship_coordinates = []
         self.orientation = ""
 
     def ship_placement(self):
@@ -84,7 +90,7 @@ class Ship:
                     else:
                         for i in range(self.size):
                             player_board.board[self.y_pos - 1][(self.x_pos - 1) + i] = " X "
-                            self.coordinates.append([self.x_pos + i, self.y_pos])
+                            self.ship_coordinates.append([self.x_pos + i, self.y_pos])
                 else:
                     if (self.x_pos - 1) > player_board.x or (
                             self.y_pos - 1) + self.size > player_board.y or self.check_collision():
@@ -92,14 +98,14 @@ class Ship:
                     else:
                         for i in range(self.size):
                             player_board.board[(self.y_pos - 1) + i][self.x_pos - 1] = " X "
-                            self.coordinates.append([self.x_pos, self.y_pos + i])
+                            self.ship_coordinates.append([self.x_pos, self.y_pos + i])
 
             # TODO: meant to do something here, but forgot what > change X axis to letter in input
 
             except IndexError:
                 print("Wrong coordinates")
                 self.ship_placement()
-        print(self.coordinates)
+        print(self.ship_coordinates)
 
     def check_collision(self):
         if self.orientation == "v":
@@ -111,7 +117,7 @@ class Ship:
                 if player_board.board[self.y_pos - 1][(self.x_pos - 1) + i] == " X ":
                     return True
 
-    def get_damage(self):
+    def deal_damage(self):
         self.damage += 1
 
 
@@ -131,3 +137,5 @@ player_board.shoot()
 
 player_board.print_hidden()
 player_board.print_board()
+print(player_board.ship_list[0].damage)
+print(player_board.ship_list[1].damage)
