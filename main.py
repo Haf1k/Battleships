@@ -70,21 +70,6 @@ class Board:
             except (KeyError, ValueError, IndexError):
                 print("Enter coordinates in right form: ")
 
-    '''def computer_shoot(self):
-        x_coordinate = random.randint(1, self.x)
-        y_coordinate = random.randint(1, self.x)
-        if self.play_field[y_coordinate - 1][x_coordinate - 1] == " X ":
-            self.play_field[y_coordinate - 1][x_coordinate - 1] = " # "
-            self.hidden_play_field[y_coordinate - 1][x_coordinate - 1] = " # "
-            print("HIT\n")
-            self.find_ship([x_coordinate, y_coordinate]).deal_damage()
-        elif self.play_field[y_coordinate - 1][x_coordinate - 1] == " # ":
-            print("MISS\n")
-        else:
-            self.play_field[y_coordinate - 1][x_coordinate - 1] = " O "
-            self.hidden_play_field[y_coordinate - 1][x_coordinate - 1] = " O "
-            print("MISS\n")'''
-
     def find_ship(self, shoot_coordinates):
         for each in self.ship_list:
             if shoot_coordinates in each.ship_coordinates:
@@ -153,33 +138,6 @@ class Ship:
                 print("Wrong coordinates")
                 self.ship_placement(size, player_input)
 
-    '''def computer_ship_placement(self, size):
-        self.x_pos = random.randint(1, size)
-        self.y_pos = random.randint(1, size)
-        orientation = ["h", "v"]
-        self.orientation = random.choice(orientation)
-        try:
-            if self.orientation == "h":
-                if (self.x_pos - 1) + self.size > self.ships_board.x or (
-                        self.y_pos - 1) > self.ships_board.y or self.check_collision():
-                    raise IndexError
-                else:
-                    for i in range(self.size):
-                        self.ships_board.play_field[self.y_pos - 1][(self.x_pos - 1) + i] = " X "
-                        self.ship_coordinates.append([self.x_pos + i, self.y_pos])
-            else:
-                if (self.x_pos - 1) > self.ships_board.x or (
-                        self.y_pos - 1) + self.size > self.ships_board.y or self.check_collision():
-                    raise IndexError
-                else:
-                    for i in range(self.size):
-                        self.ships_board.play_field[(self.y_pos - 1) + i][self.x_pos - 1] = " X "
-                        self.ship_coordinates.append([self.x_pos, self.y_pos + i])
-
-        except IndexError:
-            print("Wrong coordinates")
-            self.computer_ship_placement(size)'''
-
     def check_collision(self):
         if self.orientation == "v":
             for i in range(self.size):
@@ -201,29 +159,7 @@ class Ship:
             print("Ship destroyed\n\n")
 
 
-"""
-def playervsplayer():
-    while True:
-        try:
-            playfield = int(input("Select size of play-field (5 - 10): "))
-            print(type(playfield))
-            print(playfield)
-            if playfield != (5 or 6 or 7 or 8 or 9 or 10):
-                raise ValueError
-            break
-        except ValueError:
-            print("Not a valid option!")
-
-    player1_board = Board(playfield, playfield)
-    player2_board = Board(playfield, playfield)
-
-    # TODO there is really not a point to continue this because it is nonsense to play battleships on one computer in
-    #  this form
-    
-"""
-
-
-def playervspc():
+def player_vs_pc():
     while True:
         try:
             playfield = int(input("Select size of play-field (5 - 10): "))
@@ -287,7 +223,7 @@ def game():
             case "B":
                 print("PLAYER VS PC")
 
-                player, computer = playervspc()
+                player, computer = player_vs_pc()
             case _other:
                 print("Invalid input")
                 continue
