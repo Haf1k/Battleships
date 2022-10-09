@@ -163,8 +163,6 @@ def player_vs_pc():
     while True:
         try:
             playfield = int(input("Select size of play-field (5 - 10): "))
-            print(type(playfield))
-            print(playfield)
             if playfield not in range(5, 11):
                 raise ValueError
             break
@@ -186,7 +184,7 @@ def player_vs_pc():
     for i in range(number_of_ships):
         player1_board.print_board()
         player1_board.ship_list.append(Ship(POSSIBLE_SHIPS[i], player1_board))
-        player1_board.ship_list[i].ship_placement(playfield, False)
+        player1_board.ship_list[i].ship_placement(playfield, True)
 
         computer_board.print_board()
         computer_board.ship_list.append(Ship(POSSIBLE_SHIPS[i], computer_board))
@@ -239,9 +237,9 @@ def game():
 
                 print("Players turn!\n")
                 player.print_board()
-                computer.print_board()
+                # computer.print_board()
                 computer.print_hidden()
-                computer.shoot(False)
+                computer.shoot(True)
 
                 if not computer.fleet_status():
                     print("Game is OVER!\nPlayer WON!\n")
