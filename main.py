@@ -219,7 +219,7 @@ def game():
             case "B":
                 print("PLAYER VS PC")
 
-                player, computer = player_vs_pc()
+                player_board, computer_board = player_vs_pc()
 
             case "Q":
                 break
@@ -238,18 +238,18 @@ def game():
             elif gamemode == "B":
 
                 print("Players turn!\n")
-                player.print_board()
-                computer.print_board(False)
-                computer.shoot(True)
+                player_board.print_board()
+                computer_board.print_board(False)
+                computer_board.shoot(True)
 
-                if not computer.fleet_status():
+                if not computer_board.fleet_status():
                     print("Game is OVER!\nPlayer WON!\n")
                     break
 
                 print("Computers turn!\n")
-                player.shoot(False)
+                player_board.shoot(False)
 
-                if not player.fleet_status():
+                if not player_board.fleet_status():
                     print("Game is OVER!\nComputer WON!\n")
                     break
 
