@@ -7,6 +7,10 @@ LETTER_TO_NUM = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8,
 
 class Board:
 
+    # Class have 2 play fields. Play_field is main with ships placed on it. Hidden_play_field is for mirroring
+    # other players shots so that he sees where he already shot and if he hit some ship or not.
+    # Play_field is for owner to see where he has ships and if they are damaged.
+    # Hidden_play_field is to see enemies play_field without ships and only with fired shots.
     def __init__(self, x=10, y=10):
         self.x = x
         self.y = y
