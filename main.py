@@ -7,15 +7,16 @@ LETTER_TO_NUM = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8,
 
 class Board:
 
-    def __init__(self, x=10, y=10, is_hidden=True):
+    def __init__(self, x=10, y=10):
         self.x = x
         self.y = y
         self.play_field = [[" – " for _ in range(x)] for _ in range(y)]
         self.hidden_play_field = [[" ~ " for _ in range(x)] for _ in range(y)]
-        self.is_hidden = is_hidden
         self.ship_list = []
 
-    def print_board(self):
+    # Function prints row with letters and column with numbers according to chosen size of playfield
+    # Then it's filled either with character for visible board or invisible board according to variable "visibility"
+    def print_board(self, visibility=True):
         print(" ", end='')
         for col in range(self.x):
             print(" ", string.ascii_uppercase[col], end='')
@@ -26,25 +27,16 @@ class Board:
             else:
                 print(row + 1, end='')
             for col in range(self.y):
-                print(self.play_field[row][col], end='')
+                if visibility:
+                    print(self.play_field[row][col], end='')
+                else:
+                    print(self.hidden_play_field[row][col], end='')
             print("")
         print("")
 
-    def print_hidden(self):
-        print(" ", end='')
-        for col in range(self.x):
-            print(" ", string.ascii_uppercase[col], end='')
-        print("")
-        for row in range(self.x):
-            if row + 1 < 10:
-                print(row + 1, end=' ')
-            else:
-                print(row + 1, end='')
-            for col in range(self.y):
-                print(self.hidden_play_field[row][col], end='')
-            print("")
-        print("")
-
+    # Function for shooting, takes input and checks if on selected coordinates is ship or not. On the coordinates it
+    # changes character depending on whether there was hit or not. If hit, calls find_ship and deal_damage
+    # If there is computer round for shooting, it selects random coordinates
     def shoot(self, player_input=True):
         while True:
             try:
@@ -98,6 +90,9 @@ class Ship:
         self.orientation = ""
         self.ships_board = board
 
+    # Function checks if ship can be placed in selected coordinates, if it's out of boundaries of playfield, throws
+    # exception. Also checks for collision with other ships by calling check_collision
+    # IF it's computers turn, coordinates are selected randomly until all ships are placed.
     def ship_placement(self, size=10, player_input=True):
         try:
             if player_input:
@@ -138,6 +133,7 @@ class Ship:
                 print("Wrong coordinates")
                 self.ship_placement(size, player_input)
 
+    # Checks if position of new ship is not colliding with already existing ship. If it is, returns True
     def check_collision(self):
         if self.orientation == "v":
             for i in range(self.size):
@@ -158,19 +154,19 @@ class Ship:
             self.destroyed = True
             print("Ship destroyed\n\n")
 
-
+# Function for setting up playarea in player vs pc mode. Player selects size of playarea and number of ships.
 def player_vs_pc():
     while True:
         try:
-            playfield = int(input("Select size of play-field (5 - 10): "))
-            if playfield not in range(5, 11):
+            playarea = int(input("Select size of play-area (5 - 10): "))
+            if playarea not in range(5, 11):
                 raise ValueError
             break
         except ValueError:
             print("Not a valid option!")
 
-    player1_board = Board(playfield, playfield)
-    computer_board = Board(playfield, playfield)
+    player1_board = Board(playarea, playarea)
+    computer_board = Board(playarea, playarea)
 
     while True:
         try:
@@ -184,14 +180,16 @@ def player_vs_pc():
     for i in range(number_of_ships):
         player1_board.print_board()
         player1_board.ship_list.append(Ship(POSSIBLE_SHIPS[i], player1_board))
-        player1_board.ship_list[i].ship_placement(playfield, True)
+        player1_board.ship_list[i].ship_placement(playarea, True)
 
         computer_board.print_board()
         computer_board.ship_list.append(Ship(POSSIBLE_SHIPS[i], computer_board))
-        computer_board.ship_list[i].ship_placement(playfield, False)
+        computer_board.ship_list[i].ship_placement(playarea, False)
     return player1_board, computer_board
 
 
+# Body of the game. After selecting gamemode and setting play area, player and computer changes turns with shooting
+# until some of them destroys all the enemy ships.
 def game():
     while True:
         print("Welcome to the game of BATTLESHIPS!\n\n")
@@ -207,7 +205,7 @@ def game():
                                                                                88  
     """)
         print("Which game mode do you want to play?\n")
-        print("Player vs Player: A \tPlayer vs. Computer: B\n\n")
+        print("Player vs Player: A \tPlayer vs. Computer: B \t\tQuit: Q\n\n")
 
         gamemode = input("Input letter according to your choice: ").upper()
 
@@ -222,6 +220,10 @@ def game():
                 print("PLAYER VS PC")
 
                 player, computer = player_vs_pc()
+
+            case "Q":
+                break
+
             case _other:
                 print("Invalid input")
                 continue
@@ -237,8 +239,7 @@ def game():
 
                 print("Players turn!\n")
                 player.print_board()
-                # computer.print_board()
-                computer.print_hidden()
+                computer.print_board(False)
                 computer.shoot(True)
 
                 if not computer.fleet_status():
